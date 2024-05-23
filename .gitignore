@@ -3,7 +3,8 @@ tmp
 src/__pycache__
 *.f
 *.log
-testbench_gen.py
+./testbench_gen.py
 TestTop.v
 others.sv
 tb_top.sv
+tb_examples

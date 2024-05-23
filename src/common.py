@@ -40,16 +40,26 @@ class ArgParser:
 		self.clk_period   = args.period  or self.clk_period
 		self.tbtop_name   = args.tbtop   or self.tbtop_name
 		self.ign_pat_file = args.ign_pat_file
-		self.nodpi		= args.nodpi   or self.nodpi
+		self.nodpi		  = args.nodpi   or self.nodpi
 		self.verbose	  = args.verbose or self.verbose
 		self.custom_code  = args.custom_code
-
-
-		assert args.top  != None, "top module name is not specified!"
+		
+		# check arg correctness
+		self.check()
+			
+	# to avoid bug
+	def check(self):
+		# assertions
+		assert self.expect_top != None, "top module name is not specified!"
 		assert self.file != None or self.filelist != None, "you should use <-f> to point out the design file or use <-fl> to point out filelist"
 		assert not (self.file != None and self.filelist != None), "you should not use a specific file and a filelist at the same time"
 		if  self.file != None:
 			assert os.path.isfile(self.file), f"input verilog file is not exist ==> {self.file}"
+				
+		if not os.path.exists(self.out_dir):
+			os.makedirs(self.out_dir)
+
+		
 
 # Deal with files and filelists
 class FileHelper:
@@ -99,4 +109,5 @@ class FileHelper:
 		self.info_print("FileList:")
 		for file in filelist:
 		    self.info_print(file)
+
 

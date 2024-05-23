@@ -1,28 +1,28 @@
 from common import *
+from tb_generator import TBGenerator
+from rtl_info import *
 import pyslang
 
 # ===================
 # Top Function
 # ===================
 def HDL_Dealer_top():
+    # parse Arguments
     args        = ArgParser()
-    file_helper = FileHelper()
     args.arg_parser()
-    
-    # ---------------------
+
     # parse design file
-    # ---------------------
-    # use file
-    c = pyslang.Compilation()
-    if args.file != None:
-        tree = pyslang.SyntaxTree.fromFile(args.file)
-        c.addSyntaxTree(tree)
-    # use filelist
-    if args.filelist != None:
-        filelist = file_helper.parse_filelist(args.filelist)
-        for file in filelist:
-            tree = pyslang.SyntaxTree.fromFile(file)
-            c.addSyntaxTree(tree)
+    all_infos = ALLInfo(args)
+    
+    
+    
+
+    # ----------------------
+    # All Functions
+    # ----------------------
+    tb_generator = TBGenerator(args)
+    tb_generator.tb_gen_top()
+
 
 
 
