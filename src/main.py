@@ -20,7 +20,7 @@ def HDL_Dealer_top():
     # ----------------------
     # All Functions
     # ----------------------
-    tb_generator = TBGenerator(args)
+    tb_generator = TBGenerator(args, all_infos)
     tb_generator.tb_gen_top()
 
 

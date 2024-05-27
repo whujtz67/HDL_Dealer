@@ -13,6 +13,7 @@ class ArgParser:
 		self.nodpi		  = False
 		self.verbose	  = False
 		self.custom_code  = None 
+		self.core_num     = None
 
 
 	def arg_parser(self):
@@ -28,6 +29,7 @@ class ArgParser:
 		parser.add_argument('--nodpi', '-nd', dest="nodpi", action='store_true', help='whether generate DPI-C port interface functions or not')
 		parser.add_argument('--verbose', '-v', dest="verbose", action='store_true', help='verbose')
 		parser.add_argument('--custom-code', '-cc', dest="custom_code", type=str, help='input custom code file, will be inserted in somewhere of the testbench')
+		parser.add_argument('--core', '-c', dest="core", type=str, help='core number')
 		args = parser.parse_args()
 
 
@@ -43,6 +45,7 @@ class ArgParser:
 		self.nodpi		  = args.nodpi   or self.nodpi
 		self.verbose	  = args.verbose or self.verbose
 		self.custom_code  = args.custom_code
+		self.core_num     = int(args.core)
 		
 		# check arg correctness
 		self.check()
@@ -109,5 +112,6 @@ class FileHelper:
 		self.info_print("FileList:")
 		for file in filelist:
 		    self.info_print(file)
+
 
 

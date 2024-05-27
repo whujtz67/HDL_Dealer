@@ -7,18 +7,18 @@ from common import ArgParser
 CLOCK_PATTERNS = ["clock", "clock_i", "clk", "clk_i", "enq_clock"]
 RESET_PATTERNS = ["reset", "reset_i", "rst", "rst_i", "enq_reset"]
 
-REG_STR  = "reg"
+REG_STR  = "reg "
 WIRE_STR = "wire"
 
 class PortInfo:
 	def __init__(self, name, width, dir, array_size = 0, is_disable=False):
-		assert name    != None
+		assert name	!= None
 		assert width   != None
-		assert dir     != None
-		self.name       = name
-		self.width      = width
+		assert dir	 != None
+		self.name	   = name
+		self.width	  = width
 		self.array_size = array_size
-		self.dir        = dir
+		self.dir		= dir
 		self.is_disable = is_disable
 
 	def is_array(self):
@@ -49,7 +49,7 @@ class ALLInfo:
 
 		# common infomations
 		self.top_name  = self.c.getRoot().topInstances[0].name
-		self.root      = self.c.getRoot().find(args.expect_top)
+		self.root	  = self.c.getRoot().find(args.expect_top)
 		self.port_list = self.root.body.portList
 
 		assert self.top_name == args.expect_top, f"parsed_top_name != expected top name: {self.top_name} != {args.expect_top}"
@@ -57,7 +57,11 @@ class ALLInfo:
 
 		self.ignore_pats = self.get_ignore_pattern()
 
-		self.port_infos = self.port_info_parser()
+		self.port_infos, self.port_max_len = self.port_info_parser()
+
+		self.symbols = []
+
+		
 
 
 
@@ -88,9 +92,9 @@ class ALLInfo:
 		port_max_len = 0
 		for i, port in enumerate(self.port_list):
 			assert port.isAnsiPort
-			name       = port.name
+			name	   = port.name
 			direction  = port.direction.name
-			ptype      = port.type.__str__()
+			ptype	  = port.type.__str__()
 			self.info_print(f"[{i}]\tname: {name}\tport_type: {ptype}\tdirection: {direction}", "Port Parser")
 
 			if isinstance(port.type, pyslang.FixedSizeUnpackedArrayType):
@@ -119,7 +123,7 @@ class ALLInfo:
 			else:
 				assert False, f"Unknown type => {type(port.type)}"
 
-		return ports
+		return ports, port_max_len
 
 	def get_ignore_pattern(self):
 		ignore_patterns = []
@@ -142,5 +146,14 @@ class ALLInfo:
 					self.args.verbose and self.info_print(f"disable match => {p} {port_name}", "Port Parser")
 					return True
 			return False
+		
+	def handle(self, obj):
+		if isinstance(obj, pyslang.Symbol):
+			self.symbols.append(obj)
+
+	def get_all_symbols(self):
+		self.root.visit(self.handle)
+
+
 
 	
